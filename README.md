@@ -12,6 +12,8 @@ Instalacja grafany
 ![my network](/pic/grafana.png)
 
 Rozwiązanie nazwy domenowej na adres IP
+
+
 ![my network](/pic/nslookup.png)
 
 Zabezpieczenie połączenia protokołem SSL
