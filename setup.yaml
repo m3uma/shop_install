@@ -38,7 +38,10 @@
 
 - hosts: web_nodes
   vars:
+    domain_name: mczu.edu-cloud.uek.krakow.pl
+    domain_owner_email: s212529@student.uek.krakow.pl
     epel_rpm_url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    cert_bot_rpm: https://download-ib01.fedoraproject.org/pub/epel/testing/7/aarch64/Packages/c/certbot-0.39.0-1.el7.noarch.rpm
     app_nodes:
       - 172.31.47.19:3000
   become: yes
@@ -49,6 +52,14 @@
     - name: install nginx
       yum:
         name: nginx
+    - name: "install certbot dependencies"
+      yum:
+        name: "{{ cert_bot_rpm }}"
+        state: present
+    - name: "install certbot nginx-plugin"
+      yum:
+        name: "certbot-nginx"
+        state: present
     - name: put nginx cfg into /etc
       template:
         src: files/nginx/vouchershop.conf
@@ -58,6 +69,9 @@
         name: nginx
         enabled: yes
         state: restarted
+    - name: install certificate
+      command: 
+        cmd: certbot -i nginx --nginx -d "{{ domain_name }}" -m "{{ domain_owner_email }}" --agree-tos --redirect
 
 - hosts: stats_db
   become: yes
